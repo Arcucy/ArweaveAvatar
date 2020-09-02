@@ -1,6 +1,6 @@
-# arweave-avatar
-
-> Avatar upload and manage for Arweave Identification
+<h1 align="center">ArweaveAvatar</h1>
+<p align="center">Avatar upload and manage for Arweave Identification</p>
+<p align="center"> Link at Permaweb: <a href="https://arweave.net/iW0lLW-C4QsoEwhFU3oRUeVnEYBw7A1rO5zi2bz-mU8">Online</a></p>
 
 ## Build Setup
 
