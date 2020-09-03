@@ -5,7 +5,8 @@
       <div class="wallet">
         {{ walletAddress }}
       </div>
-      <div class="upload">
+      <el-progress v-if="loading" type="circle" :percentage="loadingPct"></el-progress>
+      <div v-else class="upload">
         <img-upload
           :img-upload-done="imgUploadDone"
           :update-type="'avatar'"
@@ -64,7 +65,9 @@ export default {
       fileContent: '',
       fileRaw: '',
       fileName: '',
-      imgUploadDone: 0
+      imgUploadDone: 0,
+      loading: true,
+      loadingPct: 0
     }
   },
   computed: {
@@ -86,7 +89,6 @@ export default {
         webp: 'image/webp'
       }
       let ext = this.avatarFile.name.split('.').pop()
-      console.log(ext)
       console.log('Content-Type:', type[ext])
       this.uploadFile({ data: this.fileRaw, key: this.keyFileContent, type: type[ext] })
       this.$router.push({ path: '/upload' })
@@ -131,12 +133,24 @@ export default {
       if (this.walletAddress === '') {
         this.$router.push({ path: '/' })
       }
-    }, 2000)
 
-    API.arweave.getAvatar(this.walletAddress).then(res => {
-      this.avatar = res
-      return res
-    })
+      let intervalId = setInterval(() => {
+        this.loadingPct++
+      }, 500)
+
+      API.arweave.getAvatar(this.walletAddress).then(res => {
+        console.log(res)
+        this.avatar = res
+        clearInterval(intervalId)
+        this.loadingPct = 100
+
+        setTimeout(() => {
+          this.loading = false
+        }, 2000)
+
+        return res
+      })
+    }, 2000)
   }
 }
 </script>

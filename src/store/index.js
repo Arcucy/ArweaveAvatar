@@ -24,7 +24,8 @@ export default new Vuex.Store({
     avatar: '',
     avatarFile: '',
     uploadPct: '',
-    avatarLink: ''
+    avatarId: '',
+    avatarAfterUpload: ''
   },
   mutations: {
     setKeyFileContent (state, file) {
@@ -42,8 +43,11 @@ export default new Vuex.Store({
     setUploadPct (state, pct) {
       state.uploadPct = pct
     },
-    setAvatarLink (state, link) {
-      state.avatarLink = link
+    setAvatarId (state, id) {
+      state.avatarId = id
+    },
+    setAvatarAfterUpload (state, avatar) {
+      state.avatarAfterUpload = avatar
     }
   },
   getters: {
@@ -83,14 +87,19 @@ export default new Vuex.Store({
           commit('setUploadPct', uploader.pctComplete)
         }
 
-        commit('setAvatarLink', 'https://arweave.net/' + transaction.id)
+        commit('setAvatarId', transaction.id)
 
         const response = await ar.transactions.post(transaction)
         console.log(response)
       })
     },
-    setAvatarLink ({ commit }, link) {
-      commit('setAvatarLink', link)
+    setAvatarId ({ commit }, id) {
+      commit('setAvatarId', id)
+    },
+    getAvatarFromId ({ commit }, id) {
+      ar.transactions.getData(id, {decode: true, string: true}).then(data => {
+        commit('setAvatarAfterUpload', data)
+      })
     }
   }
 })

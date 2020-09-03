@@ -8,7 +8,8 @@
       <div v-if='!upload' class="success-info">
         <i class="el-icon-success" style="font-size: 10rem; color: #67C23A;"></i>
         <span>Upload Successful!</span>
-        <span v-if="!upload && avatarLink !== ''">Link to your avatar: <a :href="avatarLink">{{ avatarLink }}</a></span>
+        <span v-if="!upload && avatarLink !== ''" style="margin-top: 1rem;">Link to your avatar: <a :href="avatarLink">{{ avatarLink }}</a></span>
+        <img :src="getAvatar()" />
       </div>
     </div>
     <Footer />
@@ -35,7 +36,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['uploadPct', 'avatarLink'])
+    ...mapState(['uploadPct', 'avatarLink', 'avatarAfterUpload'])
   },
   watch: {
     uploadPct (val) {
@@ -45,6 +46,11 @@ export default {
         this.upload = false
       }
       console.log(val)
+    }
+  },
+  methods: {
+    getAvatar () {
+      return this.avatarAfterUpload
     }
   },
   created () {
