@@ -1,5 +1,4 @@
 import Arweave from 'arweave'
-import Axios from 'axios'
 
 let ar = Arweave.init({
   host: 'arweave.net',
@@ -31,7 +30,6 @@ let arweave = {
   },
 
   getAvatar (address) {
-    let all = []
     return new Promise((resolve, reject) => {
       console.log('collecting data for:', address)
       ar.arql({
@@ -54,43 +52,52 @@ let arweave = {
             expr2: 'avatar'
           }
         }
-      }).then(ids => {
-        ids.forEach(id => {
-          this.getTransactionDetail(id).then(detail => {
-            detail.get('tags').forEach(tag => {
-              let key = tag.get('name', { decode: true, string: true })
-              let value = tag.get('value', { decode: true, string: true })
-              if (key === 'Unix-Time') {
-                all.push({
-                  id: id,
-                  time: value
-                })
-              }
-            })
-          })
-        })
-      })
+      }).then(async ids => {
+        console.log(ids)
 
-      if (all.length === 0) {
-        resolve(false)
-        return
-      }
-
-      let last = {}
-      all.forEach((item, index) => {
-        if (index === 0) {
-          last = item
+        if (ids.length === 0) {
+          resolve(false)
           return
         }
+        // let all = []
+        let detail = await this.getTransactionDetail(ids[0])
 
-        if (last.unix < item.unix) {
-          last = item
-        }
+        // for (let i = 0; i < ids.length; i++) {
+        //   let detail = await this.getTransactionDetail(ids[i])
+        //   detail.get('tags').forEach(tag => {
+        //     let key = tag.get('name', { decode: true, string: true })
+        //     let value = tag.get('value', { decode: true, string: true })
+        //     if (key === 'Unix-Time') {
+        //       console.log(`${key} : ${value}`)
+        //       all.push({
+        //         id: ids[i],
+        //         time: value
+        //       })
+        //     }
+        //   })
+        // }
+        // if (all.length === 0) {
+        //   resolve(false)
+        //   return
+        // }
+
+        // let last = {}
+        // all.forEach((item, index) => {
+        //   if (index === 0) {
+        //     last = item
+        //     return
+        //   }
+
+        //   if (last.unix < item.unix) {
+        //     last = item
+        //     return last
+        //   }
+        // })
+        console.log(detail.id)
+        ar.transactions.getData(detail.id, {decode: true, string: true}).then(data => {
+          resolve(data)
+        })
       })
-
-      Axios.get('https://arweave.net/' + last.id, {
-        responseType: 'arraybuffer'
-      }).then(response => resolve(Buffer.from(response.data, 'binary').toString('base64')))
     })
   },
 
@@ -110,8 +117,9 @@ let arweave = {
         console.log(`${uploader.pctComplete}% complete, ${uploader.uploadedChunks}/${uploader.totalChunks}`)
       }
 
-      const response = await ar.transactions.post(transaction)
-      console.log(response)
+      console.log(data)
+      // const response = await ar.transactions.post(transaction)
+      // console.log(response)
     })
   }
 }
