@@ -266,6 +266,7 @@ export default {
       try {
         let res = { data: { code: 0 } }
         res.data.code = 0
+        console.log(file)
         this.setAvatarFile(file)
         if (res.data.code === 0 || res.data.code === 1) {
           this.$emit('doneImageUpload', {
