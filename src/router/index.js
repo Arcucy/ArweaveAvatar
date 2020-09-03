@@ -8,6 +8,7 @@ import Upload from '@/pages/Upload.vue'
 Vue.use(Router)
 
 export default new Router({
+  mode: 'hash',
   routes: [
     {
       path: '/',
