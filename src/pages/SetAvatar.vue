@@ -5,7 +5,7 @@
       <div class="wallet">
         {{ walletAddress }}
       </div>
-      <el-progress v-if="loading" type="circle" :percentage="loadingPct"></el-progress>
+      <el-progress v-if="loading" type="circle" :percentage="loadingPct" :status="loadingStatus"></el-progress>
       <div v-else class="upload">
         <img-upload
           :img-upload-done="imgUploadDone"
@@ -67,7 +67,8 @@ export default {
       fileName: '',
       imgUploadDone: 0,
       loading: true,
-      loadingPct: 0
+      loadingPct: 0,
+      loadingStatus: ''
     }
   },
   computed: {
@@ -135,11 +136,28 @@ export default {
       }
 
       let intervalId = setInterval(() => {
-        this.loadingPct++
+        if (this.loadingPct === 100) {
+          this.loadingStatus = 'exception'
+          this.$message({
+            message: 'Avatar not Found or is Pending on confirmation',
+            type: 'error',
+            duration: 4000
+          })
+        } else {
+          this.loadingPct++
+        }
       }, 500)
 
       API.arweave.getAvatar(this.walletAddress).then(res => {
-        console.log(res)
+        if (!res) {
+          this.loadingStatus = 'exception'
+          this.$message({
+            message: 'Avatar not Found or is Pending on confirmation',
+            type: 'error',
+            duration: 4000
+          })
+          clearInterval(intervalId)
+        }
         this.avatar = res
         clearInterval(intervalId)
         this.loadingPct = 100
