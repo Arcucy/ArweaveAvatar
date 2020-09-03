@@ -1,13 +1,6 @@
 <template>
   <div class="home">
     <Header />
-    <div>
-      <p><strong>Arweave Avatar is a dApp running on permaweb.</strong><br>
-      By using this dApp, you can upload your <strong>avatar to the permaweb</strong> in case you need everybody to
-      recognize you.<br>
-      We do not collect any data from your device, this project is open sourced, anyone is welcomed to contribute to this dApp on Arweave.</p>
-    </div>
-    <br>
     <div class="upload">
       <el-upload
         v-if="needUpload"
@@ -35,8 +28,14 @@
           v-model="fileRaw">
         </el-input>
       </div>
-      <el-button v-if="!needUpload" style="margin-top: 1.5rem;" size="small" type="danger" @click="needUpload = true">Re-Upload</el-button>
-      <el-button v-if="!needUpload" style="margin-top: 1.5rem;" size="small" type="success" @click="submit">Confirm</el-button>
+      <el-button v-if="!needUpload" style="margin-top: 1.5rem;" type="danger" @click="needUpload = true">Re-Upload</el-button>
+      <el-button v-if="!needUpload" style="margin-top: 1.5rem;" type="success" @click="submit">Confirm</el-button>
+    </div>
+    <div class="introduction">
+      <p><strong>Arweave Avatar is a dApp running on permaweb.</strong><br>
+      By using this dApp, you can upload your <strong>avatar to the permaweb</strong> in case you need everybody to
+      recognize you.<br>
+      We do not collect any data from your device, this project is open sourced, anyone is welcomed to contribute to this dApp on Arweave.</p>
     </div>
     <Footer />
   </div>
@@ -109,7 +108,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="less" scoped>
 
 .home {
   display: flex;
@@ -120,5 +119,18 @@ export default {
 
 .file-content {
   margin-top: 1rem;
+}
+
+.introduction {
+  position: fixed;
+  bottom: 50px;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  text-align: center;
+}
+
+/deep/ .el-upload-dragger {
+  border: 4px dashed rgba(240, 151, 187, 0.5);
 }
 </style>
