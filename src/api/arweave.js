@@ -60,7 +60,9 @@ let arweave = {
           return
         }
         // let all = []
-        let detail = await this.getTransactionDetail(ids[0])
+        let detail = await this.getTransactionDetail(ids[0]).catch((err) => {
+          resolve(err)
+        })
 
         // for (let i = 0; i < ids.length; i++) {
         //   let detail = await this.getTransactionDetail(ids[i])
