@@ -45,7 +45,6 @@ export default {
       if (val === 100) {
         this.upload = false
       }
-      console.log(val)
     }
   },
   methods: {
@@ -54,7 +53,6 @@ export default {
     }
   },
   created () {
-    console.log(this.uploadPct)
     if (this.uploadPct === '' || this.uploadPct === undefined || this.uploadPct === null) {
       this.pct = 0
     } else if (this.uploadPct !== 0) {

@@ -53,49 +53,15 @@ let arweave = {
           }
         }
       }).then(async ids => {
-        console.log(ids)
-
         if (ids.length === 0) {
           resolve(false)
           return
         }
-        // let all = []
+
         let detail = await this.getTransactionDetail(ids[0]).catch((err) => {
           resolve(err)
         })
 
-        // for (let i = 0; i < ids.length; i++) {
-        //   let detail = await this.getTransactionDetail(ids[i])
-        //   detail.get('tags').forEach(tag => {
-        //     let key = tag.get('name', { decode: true, string: true })
-        //     let value = tag.get('value', { decode: true, string: true })
-        //     if (key === 'Unix-Time') {
-        //       console.log(`${key} : ${value}`)
-        //       all.push({
-        //         id: ids[i],
-        //         time: value
-        //       })
-        //     }
-        //   })
-        // }
-        // if (all.length === 0) {
-        //   resolve(false)
-        //   return
-        // }
-
-        // let last = {}
-        // all.forEach((item, index) => {
-        //   if (index === 0) {
-        //     last = item
-        //     return
-        //   }
-
-        //   if (last.unix < item.unix) {
-        //     last = item
-        //     return last
-        //   }
-        // })
-        console.log(detail.id)
         ar.transactions.getData(detail.id, {decode: true, string: true}).then(data => {
           resolve(data)
         })
@@ -113,15 +79,11 @@ let arweave = {
       await ar.transactions.sign(transaction, key)
       let uploader = await ar.transactions.getUploader(transaction)
 
-      console.log(transaction)
       while (!uploader.isComplete) {
         await uploader.uploadChunk()
-        console.log(`${uploader.pctComplete}% complete, ${uploader.uploadedChunks}/${uploader.totalChunks}`)
       }
 
-      console.log(data)
-      // const response = await ar.transactions.post(transaction)
-      // console.log(response)
+      await ar.transactions.post(transaction)
     })
   }
 }

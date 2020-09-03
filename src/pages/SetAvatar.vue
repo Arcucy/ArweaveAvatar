@@ -151,7 +151,6 @@ export default {
       API.arweave.getAvatar(this.walletAddress).then(res => {
         if (!res) {
           this.loadingStatus = 'exception'
-          console.log(res)
           this.$message({
             message: 'Avatar not Found or is Pending on confirmation',
             type: 'error',
