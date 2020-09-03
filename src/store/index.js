@@ -68,7 +68,6 @@ export default new Vuex.Store({
     },
     setAvatarFile ({ commit }, avatarFile) {
       commit('setAvatarFile', avatarFile)
-      console.log(avatarFile)
     },
     uploadFile ({ commit }, data) {
       ar.createTransaction({ data: data.data }, data.key).then(async transaction => {
@@ -80,10 +79,8 @@ export default new Vuex.Store({
         await ar.transactions.sign(transaction, data.key)
         let uploader = await ar.transactions.getUploader(transaction)
 
-        console.log(transaction)
         while (!uploader.isComplete) {
           await uploader.uploadChunk()
-          console.log(`${uploader.pctComplete}% complete, ${uploader.uploadedChunks}/${uploader.totalChunks}`)
           commit('setUploadPct', uploader.pctComplete)
         }
 
