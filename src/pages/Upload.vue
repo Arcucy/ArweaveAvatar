@@ -9,7 +9,7 @@
         <i class="el-icon-success" style="font-size: 10rem; color: #67C23A;"></i>
         <span>Upload Successful!</span>
         <span v-if="!upload && avatarLink !== ''" style="margin-top: 1rem;">Link to your avatar: <a :href="avatarLink">{{ avatarLink }}</a></span>
-        <img :src="getAvatar()" />
+        <img :src="getAvatar()" class="avatar"/>
       </div>
     </div>
     <Footer />
@@ -18,7 +18,7 @@
 
 <script>
 
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 
 import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
@@ -36,19 +36,29 @@ export default {
     }
   },
   computed: {
-    ...mapState(['uploadPct', 'avatarLink', 'avatarAfterUpload'])
+    ...mapState(['uploadPct', 'avatarLink', 'avatarId', 'avatarAfterUpload'])
   },
   watch: {
     uploadPct (val) {
       this.pct = parseInt(val)
 
       if (val === 100) {
+        this.$message({
+          message: 'Your avatar will be available on next mine',
+          type: 'success',
+          duration: 6000
+        })
         this.upload = false
+      } else {
+        this.upload = true
+        this.pct = 0
       }
     }
   },
   methods: {
+    ...mapActions(['getAvatarFromId', 'uploadReset']),
     getAvatar () {
+      this.getAvatarFromId(this.avatarId)
       return this.avatarAfterUpload
     }
   },
@@ -60,10 +70,13 @@ export default {
     }
 
     if (this.uploadPct === 100) {
+      this.$message({
+        message: 'Your avatar will be available on next mine',
+        type: 'success',
+        duration: 6000
+      })
       this.upload = false
-      setTimeout(() => {
-        this.$router.push({ path: '/' })
-      }, 5000)
+      this.uploadReset()
     }
   }
 }
@@ -85,5 +98,11 @@ export default {
 
 .upload-progress {
   width: 70vw;
+}
+
+.avatar {
+  height: 250px;
+  width: 250px;
+  margin: 1rem auto;
 }
 </style>
