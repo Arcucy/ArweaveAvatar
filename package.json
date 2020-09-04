@@ -1,6 +1,6 @@
 {
   "name": "arweave-avatar",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Avatar upload and manage for Arweave Identification",
   "author": "Ayaka Neko <neko@ayaka.moe>",
   "private": true,
