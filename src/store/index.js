@@ -23,7 +23,7 @@ export default new Vuex.Store({
     walletAddress: '',
     avatar: '',
     avatarFile: '',
-    uploadPct: '',
+    uploadPct: 0,
     avatarId: '',
     avatarLink: '',
     avatarAfterUpload: ''
@@ -107,7 +107,7 @@ export default new Vuex.Store({
       commit('setAvatarAfterUpload', '')
       commit('setAvatarLink', '')
       commit('setAvatarId', '')
-      commit('setUploadPct', '')
+      commit('setUploadPct', 0)
     }
   }
 })
