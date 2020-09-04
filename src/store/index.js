@@ -23,8 +23,9 @@ export default new Vuex.Store({
     walletAddress: '',
     avatar: '',
     avatarFile: '',
-    uploadPct: '',
+    uploadPct: 0,
     avatarId: '',
+    avatarLink: '',
     avatarAfterUpload: ''
   },
   mutations: {
@@ -45,6 +46,9 @@ export default new Vuex.Store({
     },
     setAvatarId (state, id) {
       state.avatarId = id
+    },
+    setAvatarLink (state, link) {
+      state.avatarLink = link
     },
     setAvatarAfterUpload (state, avatar) {
       state.avatarAfterUpload = avatar
@@ -82,12 +86,13 @@ export default new Vuex.Store({
         while (!uploader.isComplete) {
           await uploader.uploadChunk()
           commit('setUploadPct', uploader.pctComplete)
+          console.log(`${uploader.pctComplete}% complete, ${uploader.uploadedChunks}/${uploader.totalChunks}`)
         }
 
         commit('setAvatarId', transaction.id)
+        commit('setAvatarLink', 'https://arweave.net/' + transaction.id)
 
-        const response = await ar.transactions.post(transaction)
-        console.log(response)
+        await ar.transactions.post(transaction)
       })
     },
     setAvatarId ({ commit }, id) {
@@ -97,6 +102,12 @@ export default new Vuex.Store({
       ar.transactions.getData(id, {decode: true, string: true}).then(data => {
         commit('setAvatarAfterUpload', data)
       })
+    },
+    uploadReset ({ commit }) {
+      commit('setAvatarAfterUpload', '')
+      commit('setAvatarLink', '')
+      commit('setAvatarId', '')
+      commit('setUploadPct', 0)
     }
   }
 })

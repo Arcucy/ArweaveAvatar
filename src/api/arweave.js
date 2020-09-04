@@ -24,6 +24,7 @@ let arweave = {
       ar.transactions.get(txid).then(detail => {
         resolve(detail)
       }).catch(err => {
+        console.log(err)
         reject(err)
       })
     })
@@ -54,13 +55,19 @@ let arweave = {
         }
       }).then(async ids => {
         if (ids.length === 0) {
-          resolve(false)
+          resolve({ result: 'no image found' })
           return
         }
 
         let detail = await this.getTransactionDetail(ids[0]).catch((err) => {
-          resolve(err)
+          console.log(err)
+          resolve({ result: 'pending on confirm', error: err })
         })
+
+        if (!detail) {
+          resolve({ result: 'pending on upload' })
+          return
+        }
 
         ar.transactions.getData(detail.id, {decode: true, string: true}).then(data => {
           resolve(data)

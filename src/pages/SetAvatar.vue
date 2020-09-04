@@ -68,7 +68,7 @@ export default {
       imgUploadDone: 0,
       loading: true,
       loadingPct: 0,
-      loadingStatus: ''
+      loadingStatus: undefined
     }
   },
   computed: {
@@ -149,24 +149,55 @@ export default {
       }, 500)
 
       API.arweave.getAvatar(this.walletAddress).then(res => {
-        if (!res) {
+        if (res.result === 'no image found') {
           this.loadingStatus = 'exception'
           this.$message({
-            message: 'Avatar not Found or is Pending on confirmation',
+            message: 'No Avatar not Found',
             type: 'error',
-            duration: 4000
+            duration: 6000
           })
           clearInterval(intervalId)
+          this.avatar = false
+          setTimeout(() => {
+            this.loading = false
+          }, 2000)
+        } else if (res.result === 'pending on confirm') {
+          this.loadingStatus = 'exception'
+          this.$message({
+            message: 'Avatar is pending on confirmation',
+            type: 'warning',
+            duration: 6000
+          })
+          console.log(res.result.error)
+          clearInterval(intervalId)
+          this.avatar = false
+          this.loadingPct = 100
+          setTimeout(() => {
+            this.loading = false
+          }, 2000)
+        } else if (res.result === 'pending on upload') {
+          this.loadingStatus = 'exception'
+          this.$message({
+            message: 'Avatar is pending on upload',
+            type: 'warning',
+            duration: 6000
+          })
+          clearInterval(intervalId)
+          this.avatar = false
+          this.loadingPct = 100
+          setTimeout(() => {
+            this.loading = false
+          }, 2000)
+        } else {
+          this.loadingStatus = 'success'
+          this.avatar = res
+          clearInterval(intervalId)
+          this.loadingPct = 100
+
+          setTimeout(() => {
+            this.loading = false
+          }, 2000)
         }
-        this.avatar = res
-        clearInterval(intervalId)
-        this.loadingPct = 100
-
-        setTimeout(() => {
-          this.loading = false
-        }, 2000)
-
-        return res
       })
     }, 2000)
   }
