@@ -74,6 +74,8 @@ export default new Vuex.Store({
       commit('setAvatarFile', avatarFile)
     },
     uploadFile ({ commit }, data) {
+      commit('setAvatarLink', '')
+      commit('setAvatarId', '')
       ar.createTransaction({ data: data.data }, data.key).then(async transaction => {
         transaction.addTag('Content-Type', data.type)
         transaction.addTag('App-Name', 'arweave-avatar')
@@ -90,7 +92,7 @@ export default new Vuex.Store({
         }
 
         commit('setAvatarId', transaction.id)
-        commit('setAvatarLink', 'https://arweave.net/' + transaction.id)
+        commit('setAvatarLink', 'http://viewblock.io/arweave/tx/' + transaction.id)
 
         await ar.transactions.post(transaction)
       })
@@ -105,8 +107,6 @@ export default new Vuex.Store({
     },
     uploadReset ({ commit }) {
       commit('setAvatarAfterUpload', '')
-      commit('setAvatarLink', '')
-      commit('setAvatarId', '')
       commit('setUploadPct', 0)
     }
   }

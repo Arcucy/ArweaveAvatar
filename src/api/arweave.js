@@ -60,8 +60,7 @@ let arweave = {
         }
 
         let detail = await this.getTransactionDetail(ids[0]).catch((err) => {
-          console.log(err)
-          resolve({ result: 'pending on confirm', error: err })
+          if (JSON.parse(JSON.stringify(err)).type === 'TX_PENDING') resolve({ result: 'pending on confirm' })
         })
 
         if (!detail) {
