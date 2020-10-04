@@ -8,7 +8,7 @@
       <div v-if='!upload' class="success-info">
         <i class="el-icon-success" style="font-size: 10rem; color: #67C23A;"></i>
         <span>Upload Successful!</span>
-        <span v-if="!upload && avatarLink !== ''" style="margin-top: 1rem;">Link to your avatar: <a :href="avatarLink">{{ avatarLink }}</a></span>
+        <span v-if="!upload && avatarTxDisplay !== ''" style="margin-top: 1rem;">Transaction to your avatar: <a :href="avatarTxDisplay">{{ avatarTxDisplay }}</a></span>
         <img :src="getAvatar()" class="avatar"/>
       </div>
     </div>
@@ -32,7 +32,8 @@ export default {
     return {
       pct: 0,
       upload: true,
-      custom: '#E56D9B'
+      custom: '#E56D9B',
+      avatarTxDisplay: ''
     }
   },
   computed: {
@@ -53,6 +54,9 @@ export default {
         this.upload = true
         this.pct = 0
       }
+    },
+    avatarLink (val) {
+      if (val) this.avatarTxDisplay = val
     }
   },
   methods: {
@@ -76,7 +80,9 @@ export default {
         duration: 6000
       })
       this.upload = false
-      this.uploadReset()
+      setTimeout(() => {
+        this.uploadReset()
+      }, 6000)
     }
   }
 }
